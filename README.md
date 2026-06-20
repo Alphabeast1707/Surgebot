@@ -92,4 +92,4 @@ npm run dev
 The user retains custody of the `WithdrawalCap`. The `TradeCap` is locked in the shared `RiskProxy`. The AI agent's wallet address is whitelisted inside the `RiskProxy` to call trading functions, but the proxy mathematically enforces max order sizes and daily loss limits.
 
 ---
-Built with ▤ for the Sui Hackathon.
+Built with 🫶 for the Sui Hackathon.
