@@ -29,7 +29,7 @@ manifest_digest = "7AFB66695545775FBFBB2D3078ADFD084244D5002392E837FDE21D9EA1C6D
 deps = { MoveStdlib = "MoveStdlib_1" }
 
 [pinned.testnet.deepbook]
-source = { git = "https://github.com/MystenLabs/deepbookv3.git", subdir = "packages/deepbook", rev = "5411ef3aa93f7722409b2a85047baa3d4d830c07" }
+source = { git = "https://github.com/MystenLabs/deepbookv3.git", subdir = "packages/deepbook", rev = "5e4d23801011004a88c39018e105ca02b705f449" }
 use_environment = "testnet"
 manifest_digest = "3101923B9428545A4F52FFAD1C4F959F9BFFF84CD09CE4BCC1CB831286999B5A"
 deps = { std = "MoveStdlib_1", sui = "Sui_1", token = "token" }
@@ -37,11 +37,17 @@ deps = { std = "MoveStdlib_1", sui = "Sui_1", token = "token" }
 [pinned.testnet.surgebot]
 source = { root = true }
 use_environment = "testnet"
-manifest_digest = "FB23C241803DA5B67DF62C22116BDC9371AC67EA024D0CC227B44A584FA8C6FF"
-deps = { MoveStdlib = "MoveStdlib", Sui = "Sui", deepbook = "deepbook", token = "token" }
+manifest_digest = "EB8F33541E38146F2D4F0E981A92F28C79A0646B20611348C4320E4DBE4B3DF0"
+deps = { MoveStdlib = "MoveStdlib", Sui = "Sui", deepbook = "deepbook", token = "token_1" }
 
 [pinned.testnet.token]
-source = { git = "https://github.com/MystenLabs/deepbookv3.git", subdir = "packages/token", rev = "5411ef3aa93f7722409b2a85047baa3d4d830c07" }
+source = { git = "https://github.com/MystenLabs/deepbookv3.git", subdir = "packages/token", rev = "daa5a9514908968f11be1d0388f673e0ee1a5059" }
+use_environment = "testnet"
+manifest_digest = "5745706258F61D6CE210904B3E6AE87A73CE9D31A6F93BE4718C442529332A87"
+deps = { std = "MoveStdlib_1", sui = "Sui_1" }
+
+[pinned.testnet.token_1]
+source = { git = "https://github.com/MystenLabs/deepbookv3.git", subdir = "packages/token", rev = "5e4d23801011004a88c39018e105ca02b705f449" }
 use_environment = "testnet"
 manifest_digest = "5745706258F61D6CE210904B3E6AE87A73CE9D31A6F93BE4718C442529332A87"
 deps = { std = "MoveStdlib_1", sui = "Sui_1" }
