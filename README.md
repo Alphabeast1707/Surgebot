@@ -1,34 +1,34 @@
-# ⚡️ SurgeBot: Autonomous AI Market Maker for DeepBook V3
+# ❖ SurgeBot: Autonomous AI Market Maker for DeepBook V3
 
 SurgeBot is a fully non-custodial, high-frequency AI market maker built exclusively for DeepBook V3 on the Sui blockchain. It utilizes the Avellaneda-Stoikov mathematical model to adjust quotes dynamically based on real-time market volatility.
 
-## 🏆 Hackathon Submission Highlights
+## ▣ Hackathon Submission Highlights
 - **Trustless Delegation (RiskProxy):** The AI agent is mathematically prevented from stealing your funds. DeepBook V3 requires an owned `TradeCap` to execute trades. SurgeBot locks that `TradeCap` inside a shared smart contract (`risk_proxy.move`) that only forwards execution commands if they pass hard-coded risk checks (max drawdown, max position size).
 - **Avellaneda-Stoikov Pricing Engine:** Calculates the reservation price (fair value adjusted for inventory risk) and the optimal spread based on an EWMA volatility estimator. 
 - **Dual Yield Farming:** Automatically stakes your DEEP tokens in DeepBook V3 to farm maker rebates and reduce taker fees while quoting.
 - **Glassmorphism Dashboard:** A sleek, modern React frontend built with `@mysten/dapp-kit` to deploy and monitor your RiskProxy.
 
-## 🏗 Architecture
+## ◈ Architecture
 
 ```mermaid
 flowchart TB
-    subgraph User["👤 User (Wallet)"]
+    subgraph User["▫️ User (Wallet)"]
         W["Sui Wallet"]
     end
 
-    subgraph Frontend["🖥 Frontend (React + Vite)"]
+    subgraph Frontend["▫️ Frontend (React + Vite)"]
         D["Deploy Tab<br/>Create BalanceManager<br/>+ TradeCap + RiskProxy"]
         M["Monitor Tab<br/>Live Price / Vol / Spread"]
         Y["Yield Tab<br/>Claim DEEP Rebates"]
     end
 
-    subgraph Chain["⛓ Sui Testnet"]
+    subgraph Chain["▫️ Sui Testnet"]
         BM["BalanceManager<br/>(Owned by User)"]
         RP["RiskProxy<br/>(Shared Object)<br/>— Holds TradeCap<br/>— Risk Config<br/>— Agent State"]
         DB["DeepBook V3 Pool<br/>SUI / DBUSDC"]
     end
 
-    subgraph Engine["🤖 AI Engine (TypeScript)"]
+    subgraph Engine["▫️ AI Engine (TypeScript)"]
         AS["Avellaneda-Stoikov<br/>Strategy"]
         VOL["EWMA Volatility<br/>Estimator"]
         INV["Inventory Skew<br/>Manager"]
@@ -66,7 +66,7 @@ flowchart TB
 5. RiskProxy enforces position & loss limits on-chain before forwarding to DeepBook
 6. Engine broadcasts tick data over WebSocket → Frontend renders live dashboard
 
-## 🚀 Quick Start
+## ⬡ Quick Start
 
 **1. Deploy Smart Contract**
 ```bash
@@ -88,8 +88,8 @@ npm install
 npm run dev
 ```
 
-## 🔒 Security Model
+## ▪️ Security Model
 The user retains custody of the `WithdrawalCap`. The `TradeCap` is locked in the shared `RiskProxy`. The AI agent's wallet address is whitelisted inside the `RiskProxy` to call trading functions, but the proxy mathematically enforces max order sizes and daily loss limits.
 
 ---
-Built with ❤️ for the Sui Hackathon.
+Built with ▤ for the Sui Hackathon.
