@@ -11,7 +11,7 @@ module surgebot::risk_proxy {
     
     use deepbook::balance_manager::{Self, BalanceManager, TradeCap};
     use deepbook::pool::{Self, Pool};
-    use deepbook::order_info::{OrderInfo};
+    use deepbook::order_info::{Self, OrderInfo};
 
     // === Errors ===
     const ENotOwner: u64 = 0;
@@ -121,6 +121,34 @@ module surgebot::risk_proxy {
         }
     }
 
+    /// Remove a pool from the whitelist. Only owner.
+    public fun remove_allowed_pool(proxy: &mut RiskProxy, pool_id: ID, ctx: &mut TxContext) {
+        assert!(tx_context::sender(ctx) == proxy.owner, ENotOwner);
+        if (vec_set::contains(&proxy.config.allowed_pools, &pool_id)) {
+            vec_set::remove(&mut proxy.config.allowed_pools, &pool_id);
+        }
+    }
+
+    /// Update the authorized agent address. Only owner.
+    public fun update_agent(proxy: &mut RiskProxy, new_agent: address, ctx: &mut TxContext) {
+        assert!(tx_context::sender(ctx) == proxy.owner, ENotOwner);
+        proxy.agent = new_agent;
+    }
+
+    /// Update risk configuration limits. Only owner.
+    public fun update_risk_config(
+        proxy: &mut RiskProxy, 
+        max_position_size: u64,
+        max_loss_per_epoch: u64,
+        min_spread_bps: u64,
+        ctx: &mut TxContext
+    ) {
+        assert!(tx_context::sender(ctx) == proxy.owner, ENotOwner);
+        proxy.config.max_position_size = max_position_size;
+        proxy.config.max_loss_per_epoch = max_loss_per_epoch;
+        proxy.config.min_spread_bps = min_spread_bps;
+    }
+
     /// Forward place_limit_order to DeepBook after risk checks
     public fun place_limit_order<BaseAsset, QuoteAsset>(
         proxy: &mut RiskProxy,
@@ -160,7 +188,7 @@ module surgebot::risk_proxy {
         let proof = balance_manager::generate_proof_as_trader(balance_manager, &proxy.trade_cap, ctx);
 
         // Forward to DeepBook
-        pool::place_limit_order(
+        let order_info = pool::place_limit_order(
             pool,
             balance_manager,
             &proof,
@@ -174,7 +202,19 @@ module surgebot::risk_proxy {
             expire_timestamp,
             clock,
             ctx
-        )
+        );
+
+        let executed_qty = order_info::executed_quantity(&order_info);
+        
+        if (executed_qty > 0) {
+            proxy.state.total_fills = proxy.state.total_fills + 1;
+            
+            // Simplified position tracking: track absolute size 
+            // (In a real delta-neutral MM, this would track long vs short exposure accurately)
+            proxy.state.current_position = proxy.state.current_position + executed_qty;
+        };
+
+        order_info
     }
 
     /// Forward cancel_order to DeepBook
@@ -200,28 +240,7 @@ module surgebot::risk_proxy {
         );
     }
 
-    /// Forward cancel_live_order to DeepBook
-    public fun cancel_live_order<BaseAsset, QuoteAsset>(
-        proxy: &mut RiskProxy,
-        pool: &mut Pool<BaseAsset, QuoteAsset>,
-        balance_manager: &mut BalanceManager,
-        order_id: u128,
-        clock: &Clock,
-        ctx: &mut TxContext
-    ) {
-        assert!(tx_context::sender(ctx) == proxy.agent || tx_context::sender(ctx) == proxy.owner, ENotAuthorizedAgent);
-        
-        let proof = balance_manager::generate_proof_as_trader(balance_manager, &proxy.trade_cap, ctx);
-        
-        pool::cancel_live_order(
-            pool,
-            balance_manager,
-            &proof,
-            order_id,
-            clock,
-            ctx
-        );
-    }
+
 
     // === DEEP Tokenomics (Dual Yield) ===
 
