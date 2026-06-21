@@ -1,8 +1,8 @@
-# ❖ SurgeBot: Autonomous AI Market Maker for DeepBook V3
+# SurgeBot: Autonomous AI Market Maker for DeepBook V3
 
 SurgeBot is a fully non-custodial, high-frequency AI market maker built exclusively for DeepBook V3 on the Sui blockchain. It utilizes the Avellaneda-Stoikov mathematical model to adjust quotes dynamically based on real-time market volatility.
 
-## ▣ Hackathon Submission Highlights
+## Hackathon Submission Highlights
 - **Trustless Delegation (RiskProxy):** The AI agent is mathematically prevented from stealing your funds. DeepBook V3 requires an owned `TradeCap` to execute trades. SurgeBot locks that `TradeCap` inside a shared smart contract (`risk_proxy.move`) that only forwards execution commands if they pass hard-coded risk checks (max drawdown, max position size).
 - **Avellaneda-Stoikov Pricing Engine:** Calculates the reservation price (fair value adjusted for inventory risk) and the optimal spread based on an EWMA volatility estimator. 
 - **Dual Yield Farming:** Automatically stakes your DEEP tokens in DeepBook V3 to farm maker rebates and reduce taker fees while quoting.
